@@ -1,93 +1,166 @@
+(() => {
+    // DOM Elements
+    const DOM = {
+        digitsInput: document.getElementById('digits'),
+        positionInput: document.getElementById('position'),
+        maxPositionSpan: document.getElementById('maxPosition'),
+        errorDiv: document.getElementById('error'),
+        resultSection: document.getElementById('result'),
+        calculationSteps: document.getElementById('calculationSteps'),
+        hiddenDigitOutput: document.getElementById('hiddenDigitOutput'),
+        secretNumberOutput: document.getElementById('secretNumberOutput'),
+        roundingRadios: document.querySelectorAll('input[name="rounding"]')
+    };
 
+    // Constants
+    const MODIFIERS = { none: 0, first: 6, second: 3, both: 1 };
+    const VALIDATION_RULES = {
+        minDigits: 2,
+        maxDigits: 5,
+        minNumber: 0,
+        maxNumber: 9
+    };
 
-// Оновлення максимального розряду при зміні кількості цифр
-document.getElementById('digits').addEventListener('input', function(e) {
-    const digits = e.target.value.split(',').filter(d => d.trim() !== '');
-    document.getElementById('maxPosition').textContent = digits.length;
-    document.getElementById('position').max = digits.length;
-});
+    // Event Listeners
+    const initEventListeners = () => {
+        DOM.digitsInput.addEventListener('input', handleDigitsInput);
+        DOM.roundingRadios.forEach(radio => {
+            radio.addEventListener('change', handleRoundingChange);
+        });
+        document.querySelector('button').addEventListener('click', calculate);
+    };
 
-// Підсвітка активних полів
-document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('focus', () => {
-        input.parentElement.style.transform = 'scale(1.02)';
-    });
-    input.addEventListener('blur', () => {
-        input.parentElement.style.transform = 'scale(1)';
-    });
-});
+    // Input Handlers
+    const handleDigitsInput = (e) => {
+        const digits = e.target.value.split(',').filter(d => d.trim() !== '');
+        DOM.maxPositionSpan.textContent = digits.length;
+        DOM.positionInput.max = digits.length;
+    };
 
-// Анімація завантаження результатів
-function showResults() {
-    const resultSection = document.getElementById('result');
-    resultSection.style.opacity = '0';
-    resultSection.style.transform = 'translateY(20px)';
-    setTimeout(() => {
-        resultSection.style.opacity = '1';
-        resultSection.style.transform = 'translateY(0)';
-    }, 300);
-}
+    const handleRoundingChange = (e) => {
+        console.log('Rounding changed to:', e.target.value);
+    };
 
-// Викликати showResults() після обчислень
-function calculate() {
-        // Отримання даних
-    const digitsInput = document.getElementById('digits').value;
-    const position = parseInt(document.getElementById('position').value);
-    const rounding = document.querySelector('input[name="rounding"]:checked').value;
-    const errorDiv = document.getElementById('error');
-    errorDiv.innerHTML = '';
+    // Validation
+    const validateInput = (digits, position) => {
+        const errors = [];
+        
+        if (digits.length < VALIDATION_RULES.minDigits || 
+            digits.length > VALIDATION_RULES.maxDigits) {
+            errors.push(`Мінімальна кількість цифр — ${VALIDATION_RULES.minDigits}`);
+        }
 
-    // Валідація введених даних
-    const digits = digitsInput.split(',').map(d => parseInt(d.trim()));
-    if (digits.length < 2 || digits.length > 5) {
-        errorDiv.innerHTML = 'Мінімальна кількість цифр — 2';
-        return;
-    }
-    if (digits.some(d => isNaN(d) || d < 0 || d > 9)) {
-        errorDiv.innerHTML = 'Цифри повинні бути від 0 до 9';
-        return;
-    }
-    if (isNaN(position) || position < 1 || position > digits.length) {
-        errorDiv.innerHTML = 'Невірний розряд прихованої цифри';
-        return;
-    }
+        if (digits.some(d => d < VALIDATION_RULES.minNumber || 
+                           d > VALIDATION_RULES.maxNumber)) {
+            errors.push(`Цифри повинні бути від ${VALIDATION_RULES.minNumber} до ${VALIDATION_RULES.maxNumber}`);
+        }
 
-    // Визначення модифікатора округлення
-    const modifiers = { none: 0, first: 6, second: 3, both: 1 };
-    const modifier = modifiers[rounding];
+        if (position < 1 || position > digits.length) {
+            errors.push('Невірний розряд прихованої цифри');
+        }
 
-    // Обчислення прихованої цифри
-    const hiddenIndex = position - 1;
-    const knownSum = digits.filter((_, i) => i !== hiddenIndex).reduce((a, b) => a + b, 0);
-    const total = knownSum + modifier;
-    const nextMultiple = Math.ceil(total / 9) * 9;
-    let hiddenDigit = nextMultiple - total;
-    hiddenDigit = hiddenDigit === 0 ? 9 : hiddenDigit;
+        return errors;
+    };
 
-    // Обчислення загаданого числа
-    const allDigitsSum = knownSum + hiddenDigit;
-    const secretNumber = Math.floor((allDigitsSum + modifier) / 9 * 4);
+    // Calculations
+    const calculateHiddenDigit = (digits, position, modifier) => {
+        const hiddenIndex = position - 1;
+        const knownSum = digits
+            .filter((_, i) => i !== hiddenIndex)
+            .reduce((a, b) => a + b, 0);
+        
+        const total = knownSum + modifier;
+        const nextMultiple = Math.ceil(total / 9) * 9;
+        return nextMultiple - total || 9;
+    };
 
-    // Виведення результатів
-    document.getElementById('hiddenDigitOutput').textContent = `Прихована цифра: ${hiddenDigit}`;
-    document.getElementById('secretNumberOutput').textContent = `Загадане число: ${secretNumber}`;
+    const calculateSecretNumber = (knownSum, hiddenDigit, modifier) => {
+        return Math.floor((knownSum + hiddenDigit + modifier) / 9 * 4);
+    };
 
-    // Деталізація обчислень
-    const steps = `
-        <h3>Деталі обчислення:</h3>
-        <p>Сума відомих цифр: ${knownSum}</p>
-        <p>Модифікатор округлення: ${modifier}</p>
-        <p>Сума з модифікатором: ${total}</p>
-        <p>Найближче кратне 9: ${nextMultiple}</p>
-        <p>Різниця: ${nextMultiple} - ${total} = ${hiddenDigit}</p>
-        <p>Формула загаданого числа: (${allDigitsSum} + ${modifier}) / 9 × 4 = ${secretNumber}</p>
-    `;
-    document.getElementById('calculationSteps').innerHTML = steps;
-    showResults();
-      const resultSection = document.getElementById('result');
-  resultSection.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-  });
-}
+    // UI Effects
+    const showResults = () => {
+        DOM.resultSection.style.opacity = '0';
+        DOM.resultSection.style.transform = 'translateY(20px)';
+        
+        requestAnimationFrame(() => {
+            DOM.resultSection.style.transition = 'all 0.3s ease-out';
+            DOM.resultSection.style.opacity = '1';
+            DOM.resultSection.style.transform = 'translateY(0)';
+        });
 
+        DOM.resultSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+        });
+    };
+
+    const showError = (messages) => {
+        DOM.errorDiv.innerHTML = messages
+            .map(msg => `<div class="error-message">${msg}</div>`)
+            .join('');
+        
+        DOM.errorDiv.style.display = 'block';
+        setTimeout(() => {
+            DOM.errorDiv.style.opacity = '1';
+        }, 10);
+    };
+
+    // Main Function
+    const calculate = () => {
+        // Reset UI
+        DOM.errorDiv.innerHTML = '';
+        DOM.errorDiv.style.display = 'none';
+
+        // Get Input Values
+        const digits = DOM.digitsInput.value
+            .split(',')
+            .map(d => parseInt(d.trim()))
+            .filter(n => !isNaN(n));
+
+        const position = parseInt(DOM.positionInput.value);
+        const rounding = document.querySelector('input[name="rounding"]:checked').value;
+
+        // Validate
+        const errors = validateInput(digits, position);
+        if (errors.length) {
+            showError(errors);
+            return;
+        }
+
+        // Calculations
+        const modifier = MODIFIERS[rounding];
+        const hiddenDigit = calculateHiddenDigit(digits, position, modifier);
+        const secretNumber = calculateSecretNumber(
+            digits.reduce((a, b) => a + b, 0) - digits[position-1],
+            hiddenDigit,
+            modifier
+        );
+
+        // Update UI
+        DOM.hiddenDigitOutput.textContent = `Прихована цифра: ${hiddenDigit}`;
+        DOM.secretNumberOutput.textContent = `Загадане число: ${secretNumber}`;
+        
+        DOM.calculationSteps.innerHTML = `
+            <h3>Деталі обчислення:</h3>
+            <p>Сума відомих цифр: ${knownSum}</p>
+            <p>Модифікатор округлення: ${modifier}</p>
+            <p>Сума з модифікатором: ${total}</p>
+            <p>Найближче кратне 9: ${nextMultiple}</p>
+            <p>Різниця: ${nextMultiple} - ${total} = ${hiddenDigit}</p>
+            <p>Формула: (${allDigitsSum} + ${modifier}) / 9 × 4 = ${secretNumber}</p>
+        `;
+
+        showResults();
+    };
+
+    // Initialization
+    const init = () => {
+        initEventListeners();
+        console.log('System initialized 🚀');
+    };
+
+    // Start App
+    init();
+})();
