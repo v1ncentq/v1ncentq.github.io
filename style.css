@@ -257,3 +257,89 @@ input[type="number"] {
     }
 }
 
+/* Медіа-запит для екранів менше 768px */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+    margin: 10px;
+    border-radius: 15px;
+  }
+
+  h1 {
+    font-size: 2rem !important;
+    margin-bottom: 1.5rem;
+  }
+
+  .input-section {
+    padding: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .rounding-options {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  .result {
+    padding: 15px;
+    margin-top: 1.5rem;
+  }
+
+  #calculationSteps p {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+/* Для дуже малих екранів (наприклад, iPhone SE) */
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 1.7rem !important;
+  }
+
+  .rounding-options label {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  input[type="text"]::placeholder {
+    font-size: 12px;
+  }
+}
+
+/* Виправлення для вертикальної орієнтації */
+@media (orientation: portrait) {
+  body {
+    min-height: 100vh;
+    padding: 10px 0;
+  }
+
+  .container::before {
+    animation: rotate 30s linear infinite;
+  }
+}
+
+/* Оптимізація тач-інтерфейсу */
+button, .rounding-options label {
+  min-height: 48px; /* Мінімальний розмір для тач-елементів */
+  touch-action: manipulation;
+}
+
