@@ -9,29 +9,81 @@
     --star-color: rgba(255, 255, 255, 0.8);
 }
 
+/* Глобальні стилі */
+html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
-        background: linear-gradient(
-        45deg,
-        var(--space-1),
-        var(--space-2)
-    );
+    background: linear-gradient(45deg, var(--space-1), var(--space-2));
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: block;
 }
 
+/* Космічні ефекти */
+body::before {
+    content: '';
+    position: absolute;
+    width: 300%;
+    height: 300%;
+    background: 
+        radial-gradient(2px 2px at 20% 30%, var(--star-color), transparent),
+        radial-gradient(2px 2px at 80% 70%, var(--star-color), transparent),
+        radial-gradient(3px 3px at 50% 90%, var(--star-color), transparent);
+    animation: stars 120s linear infinite;
+    opacity: 0.3;
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(92, 112, 214, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(231, 76, 132, 0.1) 0%, transparent 50%);
+    animation: fog 40s linear infinite alternate;
+}
+
+/* Основні анімації */
+@keyframes rotate {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes stars {
+    100% { transform: rotate(360deg) translate(0, 0); }
+}
+
+@keyframes fog {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Головний контейнер */
 .container {
     max-width: 800px;
     margin: 2rem auto;
-    background: var(--glass);
-    backdrop-filter: blur(20px);
+    background: rgba(11, 12, 30, 0.7);
+    backdrop-filter: blur(15px);
     border-radius: 30px;
     padding: 3rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 50px rgba(127, 0, 255, 0.2);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+    animation: slideIn 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .container::before {
@@ -41,19 +93,12 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: conic-gradient(
-        transparent 20%,
-        var(--accent),
-        transparent 80%
-    );
+    background: conic-gradient(transparent 20%, var(--accent), transparent 80%);
     animation: rotate 20s linear infinite;
     opacity: 0.1;
 }
 
-@keyframes rotate {
-    100% { transform: rotate(360deg); }
-}
-
+/* Заголовок */
 h1 {
     text-align: center;
     font-size: 3rem;
@@ -64,6 +109,7 @@ h1 {
     text-shadow: 0 0 20px rgba(127, 0, 255, 0.3);
 }
 
+/* Форма */
 .input-section {
     position: relative;
     z-index: 1;
@@ -80,6 +126,7 @@ h1 {
 
 .form-group {
     margin-bottom: 2rem;
+    padding: 0 15px;
 }
 
 label {
@@ -90,9 +137,13 @@ label {
     color: var(--accent);
 }
 
+/* Поля вводу */
 input[type="text"],
 input[type="number"] {
-    width: 100%;
+    width: calc(100% - 30px);
+    max-width: 500px;
+    margin: 0 auto;
+    display: block;
     padding: 1rem;
     background: rgba(0, 0, 0, 0.3);
     border: 2px solid transparent;
@@ -100,14 +151,15 @@ input[type="number"] {
     color: white;
     font-size: 1rem;
     transition: all 0.3s;
+    box-sizing: border-box;
 }
 
 input:focus {
     border-color: var(--accent);
     box-shadow: 0 0 15px var(--accent);
-    outline: none;
 }
 
+/* Радіо-кнопки */
 .rounding-options {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -124,6 +176,8 @@ input:focus {
     text-align: center;
     position: relative;
     overflow: hidden;
+    min-height: 48px;
+    touch-action: manipulation;
 }
 
 .rounding-options label::before {
@@ -133,12 +187,7 @@ input:focus {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
     transition: 0.5s;
 }
 
@@ -151,6 +200,7 @@ input[type="radio"]:checked + label {
     box-shadow: 0 0 20px var(--primary);
 }
 
+/* Кнопка */
 button {
     width: 100%;
     padding: 1.2rem;
@@ -163,6 +213,8 @@ button {
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 button::after {
@@ -185,6 +237,7 @@ button:hover::after {
     left: 100%;
 }
 
+/* Результати */
 .result {
     background: var(--glass);
     border-radius: 20px;
@@ -218,251 +271,50 @@ button:hover::after {
     backdrop-filter: blur(5px);
 }
 
-/* Видалення стандартних контурів */
-*:focus {
-    outline: none !important;
-}
-
-/* Анімація входу */
-@keyframes slideIn {
-    from { opacity: 0; transform: translateY(50px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.container {
-    animation: slideIn 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.form-group {
-    margin-bottom: 2rem;
-    padding: 0 15px; /* Додаємо внутрішні відступи */
-}
-
-input[type="text"],
-input[type="number"] {
-    width: calc(100% - 30px); /* Зменшуємо ширину з урахуванням padding */
-    max-width: 500px; /* Фіксуємо максимальну ширину */
-    margin: 0 auto; /* Центруємо поле */
-    display: block; /* Для роботи margin: auto */
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.3);
-    border: 2px solid transparent;
-    border-radius: 15px;
-    color: white;
-    font-size: 1rem;
-    transition: all 0.3s;
-    box-sizing: border-box; /* Фікс розрахунку ширини */
-}
-
-/* Для мобільних пристроїв */
+/* Адаптація для мобільних */
 @media (max-width: 768px) {
+    body::before,
+    body::after {
+        display: none;
+    }
+
+    .container {
+        margin: 0;
+        border-radius: 0;
+        padding: 15px;
+        min-height: 100vh;
+    }
+
+    h1 {
+        font-size: 2rem !important;
+    }
+
     input[type="text"],
     input[type="number"] {
-        width: calc(100% - 20px); /* Ще менше для малих екранів */
-        max-width: 100%;
+        width: calc(100% - 20px);
+        font-size: 14px;
     }
-}
 
-/* Медіа-запит для екранів менше 768px */
-@media (max-width: 768px) {
-  .container {
-    padding: 15px;
-    margin: 10px;
-    border-radius: 15px;
-  }
-
-  h1 {
-    font-size: 2rem !important;
-    margin-bottom: 1.5rem;
-  }
-
-  .input-section {
-    padding: 15px;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  input[type="text"],
-  input[type="number"] {
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  .rounding-options {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  button {
-    padding: 12px;
-    font-size: 1rem;
-  }
-
-  .result {
-    padding: 15px;
-    margin-top: 1.5rem;
-  }
-
-  #calculationSteps p {
-    font-size: 14px;
-    padding: 8px;
-  }
-}
-
-/* Для дуже малих екранів (наприклад, iPhone SE) */
-@media (max-width: 480px) {
-  .container {
-    padding: 10px;
-  }
-
-  h1 {
-    font-size: 1.7rem !important;
-  }
-
-  .rounding-options label {
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  input[type="text"]::placeholder {
-    font-size: 12px;
-  }
-}
-
-/* Виправлення для вертикальної орієнтації */
-@media (orientation: portrait) {
-  body {
-    min-height: 100vh;
-    padding: 10px 0;
-  }
-
-  .container::before {
-    animation: rotate 30s linear infinite;
-  }
-}
-
-/* Оптимізація тач-інтерфейсу */
-button, .rounding-options label {
-  min-height: 48px; /* Мінімальний розмір для тач-елементів */
-  touch-action: manipulation;
-}
-
-.touch-helper {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 20px;
-  background: transparent;
-}
-
-/* Заборона виділення при тапі */
-button, input {
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-
-/* Оптимізація анімацій */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-body::before {
-    content: '';
-    position: absolute;
-    width: 300%;
-    height: 300%;
-    background: 
-        radial-gradient(2px 2px at 20% 30%, var(--star-color), transparent),
-        radial-gradient(2px 2px at 80% 70%, var(--star-color), transparent),
-        radial-gradient(3px 3px at 50% 90%, var(--star-color), transparent);
-    animation: stars 120s linear infinite;
-    opacity: 0.3;
-}
-
-@keyframes stars {
-    100% {
-        transform: rotate(360deg) translate(0, 0);
+    .rounding-options {
+        grid-template-columns: 1fr;
     }
-}
 
-/* Ефект туману */
-body::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 20% 20%, 
-            rgba(92, 112, 214, 0.1) 0%, 
-            transparent 50%),
-        radial-gradient(circle at 80% 80%, 
-            rgba(231, 76, 132, 0.1) 0%, 
-            transparent 50%);
-    animation: fog 40s linear infinite alternate;
-}
-
-@keyframes fog {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
-}
-
-.container {
-    position: relative;
-    z-index: 1;
-    background: rgba(11, 12, 30, 0.7);
-    backdrop-filter: blur(15px);
-}
-
-/* Увімкнення гнучкої прокрутки */
-html {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-}
-
-body {
-  overflow-x: hidden;
-  overflow-y: auto; /* Дозволяємо вертикальну прокрутку */
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.container {
-  flex: 1 0 auto; /* Розтягує контейнер на весь доступний простір */
-  min-height: calc(100vh - 4rem); /* Забезпечує мінімальну висоту */
-  padding-bottom: 2rem; /* Додає місце в кінці */
-}
-
-/* Виправлення для мобільних пристроїв */
-@media (max-width: 768px) {
-  body::before,
-  body::after {
-    display: none; /* Вимикаємо складні ефекти для мобільних */
-  }
-  
-  .container {
-    min-height: 100vh;
-    margin: 0;
-    border-radius: 0;
-    padding: 15px;
-    overflow: visible; /* Забезпечує видимість всього контенту */
-  }
-  
-  .input-section {
-    transform: none !important; /* Вимикаємо трансформації */
-  }
+    .input-section {
+        transform: none !important;
+    }
 }
 
 /* Виправлення для iOS */
 @supports (-webkit-touch-callout: none) {
-  body {
-    height: -webkit-fill-available;
-  }
+    body {
+        height: -webkit-fill-available;
+    }
+}
+
+/* Вимкнення анімацій для зменшення руху */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
 }
