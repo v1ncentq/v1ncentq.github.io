@@ -84,5 +84,10 @@ function calculate() {
     `;
     document.getElementById('calculationSteps').innerHTML = steps;
     showResults();
+      const resultSection = document.getElementById('result');
+  resultSection.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
 }
 
