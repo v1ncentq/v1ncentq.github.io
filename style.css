@@ -4,15 +4,21 @@
     --accent: #00FF88;
     --dark: #1A1A2E;
     --glass: rgba(255, 255, 255, 0.1);
+    --space-1: #0B0C1E;
+    --space-2: #1A1C3A;
+    --star-color: rgba(255, 255, 255, 0.8);
 }
 
 body {
     margin: 0;
     min-height: 100vh;
-    background: linear-gradient(45deg, var(--dark), #16213E);
-    font-family: 'Poppins', sans-serif;
-    color: white;
-    overflow-x: hidden;
+        background: linear-gradient(
+        45deg,
+        var(--space-1),
+        var(--space-2)
+    );
+    position: relative;
+    overflow: hidden;
 }
 
 .container {
@@ -343,3 +349,73 @@ button, .rounding-options label {
   touch-action: manipulation;
 }
 
+.touch-helper {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+}
+
+/* Заборона виділення при тапі */
+button, input {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Оптимізація анімацій */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    width: 300%;
+    height: 300%;
+    background: 
+        radial-gradient(2px 2px at 20% 30%, var(--star-color), transparent),
+        radial-gradient(2px 2px at 80% 70%, var(--star-color), transparent),
+        radial-gradient(3px 3px at 50% 90%, var(--star-color), transparent);
+    animation: stars 120s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes stars {
+    100% {
+        transform: rotate(360deg) translate(0, 0);
+    }
+}
+
+/* Ефект туману */
+body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 20%, 
+            rgba(92, 112, 214, 0.1) 0%, 
+            transparent 50%),
+        radial-gradient(circle at 80% 80%, 
+            rgba(231, 76, 132, 0.1) 0%, 
+            transparent 50%);
+    animation: fog 40s linear infinite alternate;
+}
+
+@keyframes fog {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    background: rgba(11, 12, 30, 0.7);
+    backdrop-filter: blur(15px);
+}
