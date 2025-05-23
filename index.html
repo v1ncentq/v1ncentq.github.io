@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Вгадай число</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>NumGuess</h1>
+        <div class="input-section">
+            <div class="form-group">
+                <label for="digits">Введіть цифри (від 2 до 5 через кому):</label>
+                <input type="text" id="digits" placeholder="Наприклад: 2,4,3">
+            </div>
+            <div class="form-group">
+                <label for="position">Розряд прихованої цифри (1-<span id="maxPosition">5</span>):</label>
+                <input type="number" id="position" min="1" max="5">
+            </div>
+            <div class="form-group">
+                <label>Округлення:</label>
+                <div class="rounding-options">
+                    <label><input type="radio" name="rounding" value="none" checked> Жодного разу</label>
+                    <label><input type="radio" name="rounding" value="first"> У першому кроці</label>
+                    <label><input type="radio" name="rounding" value="second"> У другому кроці</label>
+                    <label><input type="radio" name="rounding" value="both"> В обох кроках</label>
+                </div>
+            </div>
+            <button onclick="calculate()">Розрахувати</button>
+        </div>
+        <div id="error" class="error"></div>
+        <div id="result" class="result">
+            <h2>Результат:</h2>
+            <p id="hiddenDigitOutput"></p>
+            <p id="secretNumberOutput"></p>
+            <div id="calculationSteps"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
