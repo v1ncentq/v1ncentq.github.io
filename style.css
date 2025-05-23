@@ -419,3 +419,50 @@ body::after {
     background: rgba(11, 12, 30, 0.7);
     backdrop-filter: blur(15px);
 }
+
+/* Увімкнення гнучкої прокрутки */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  overflow-x: hidden;
+  overflow-y: auto; /* Дозволяємо вертикальну прокрутку */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex: 1 0 auto; /* Розтягує контейнер на весь доступний простір */
+  min-height: calc(100vh - 4rem); /* Забезпечує мінімальну висоту */
+  padding-bottom: 2rem; /* Додає місце в кінці */
+}
+
+/* Виправлення для мобільних пристроїв */
+@media (max-width: 768px) {
+  body::before,
+  body::after {
+    display: none; /* Вимикаємо складні ефекти для мобільних */
+  }
+  
+  .container {
+    min-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+    padding: 15px;
+    overflow: visible; /* Забезпечує видимість всього контенту */
+  }
+  
+  .input-section {
+    transform: none !important; /* Вимикаємо трансформації */
+  }
+}
+
+/* Виправлення для iOS */
+@supports (-webkit-touch-callout: none) {
+  body {
+    height: -webkit-fill-available;
+  }
+}
