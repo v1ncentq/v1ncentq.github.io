@@ -96,7 +96,6 @@ input[type="number"] {
     transition: all 0.3s;
 }
 input {
-  -webkit-appearance: none;
   border-radius: 15px;
 }
 
@@ -266,7 +265,6 @@ button:hover::after {
 
 input[type="text"],
 input[type="number"] {
-    inputmode: numeric;
     width: 100%; /* Зменшуємо ширину з урахуванням padding */
     max-width: none; /* Фіксуємо максимальну ширину */
     margin: 0 auto; /* Центруємо поле */
