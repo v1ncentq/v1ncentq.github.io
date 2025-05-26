@@ -89,6 +89,8 @@ function calculate() {
     `;
     document.getElementById('calculationSteps').innerHTML = steps;
     showResults();
+
+    saveToHistory(digits, position, rounding, hiddenDigit, secretNumber);
 }
 
 function updateHistoryDisplay() {
