@@ -1,4 +1,5 @@
 const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints;
+let guessHistory = JSON.parse(localStorage.getItem('guessHistory')) || [];
 
 if(isTouchDevice) {
   document.body.classList.add('touch-device');
@@ -89,4 +90,58 @@ function calculate() {
     document.getElementById('calculationSteps').innerHTML = steps;
     showResults();
 }
+
+function updateHistoryDisplay() {
+    const historyList = document.getElementById('historyList');
+    const historyCount = document.getElementById('historyCount');
+    
+    historyList.innerHTML = '';
+    historyCount.textContent = `(${guessHistory.length})`;
+
+    guessHistory.slice().reverse().forEach((entry, index) => {
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        historyItem.innerHTML = `
+            <div class="history-entry">
+                <div>Цифри: <span class="history-value">[${entry.digits}]</span></div>
+                <div>Позиція: <span class="history-value">${entry.position}</span></div>
+                <div>Округлення: <span class="history-value">${entry.rounding}</span></div>
+                <div>Результат: <span class="history-value">${entry.hiddenDigit} → ${entry.secretNumber}</span></div>
+            </div>
+        `;
+        historyList.appendChild(historyItem);
+    });
+}
+
+function clearHistory() {
+    if(confirm('Ви впевнені, що хочете очистити історію?')) {
+        guessHistory = [];
+        localStorage.removeItem('guessHistory');
+        updateHistoryDisplay();
+    }
+}
+
+function saveToHistory(digits, position, rounding, hiddenDigit, secretNumber) {
+    guessHistory.push({
+        timestamp: new Date().toISOString(),
+        digits,
+        position,
+        rounding,
+        hiddenDigit,
+        secretNumber
+    });
+    
+    if(guessHistory.length > 50) { // Обмеження історії до 50 записів
+        guessHistory = guessHistory.slice(-50);
+    }
+    
+    localStorage.setItem('guessHistory', JSON.stringify(guessHistory));
+    updateHistoryDisplay();
+}
+
+// В кінці функції calculate(), після виведення результатів додаємо:
+saveToHistory(digits, position, rounding, hiddenDigit, secretNumber);
+
+// При завантаженні сторінки:
+document.addEventListener('DOMContentLoaded', updateHistoryDisplay);
 
