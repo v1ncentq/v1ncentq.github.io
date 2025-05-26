@@ -324,7 +324,18 @@ input[type="number"] {
     padding: 1rem;
     margin: 1rem;
     border-radius: 15px;
+  .history-item {
+    padding: 0.8rem;
+    margin: 0.3rem 0;
   }
+  .history-entry {
+        grid-template-columns: 1fr;
+  }
+  .clear-btn {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+  }
+}
 
   h1 {
     font-size: 2rem;
