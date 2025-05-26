@@ -243,6 +243,45 @@ button:hover::after {
     backdrop-filter: blur(5px);
 }
 
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.clear-btn {
+    background: linear-gradient(45deg, #ff4757, #ff6b81);
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    width: auto;
+}
+
+.history-item {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-left: 3px solid var(--accent);
+    transition: transform 0.2s;
+}
+
+.history-item:hover {
+    transform: translateX(10px);
+}
+
+.history-entry {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
+    font-family: 'Fira Code', monospace;
+}
+
+.history-value {
+    color: var(--accent);
+    word-break: break-all;
+}
+
 /* Видалення стандартних контурів */
 *:focus {
     outline: none !important;
