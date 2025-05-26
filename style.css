@@ -95,6 +95,16 @@ input[type="number"] {
     font-size: 1rem;
     transition: all 0.3s;
 }
+input {
+  -webkit-appearance: none;
+  border-radius: 15px;
+}
+
+@supports (-webkit-touch-callout: none) {
+  body {
+    min-height: -webkit-fill-available;
+  }
+}
 
 input:focus {
     border-color: var(--accent);
@@ -104,13 +114,16 @@ input:focus {
 
 .rounding-options {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
     margin-top: 1.5rem;
 }
 
 .rounding-options label {
-    padding: 1.5rem;
+    padding: 1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 15px;
     cursor: pointer;
@@ -118,6 +131,10 @@ input:focus {
     text-align: center;
     position: relative;
     overflow: hidden;
+}
+
+.rounding-options label input {
+  margin-right: 8px;
 }
 
 .rounding-options label::before {
@@ -145,7 +162,14 @@ input[type="radio"]:checked + label {
     box-shadow: 0 0 20px var(--primary);
 }
 
+.touch-device .form-group {
+  margin-bottom: 1.5rem;
+}
+
 button {
+    min-height: 50px;
+    touch-action: manipulation;
+    position: relative;
     width: 100%;
     padding: 1.2rem;
     background: linear-gradient(45deg, var(--primary), var(--secondary));
@@ -157,6 +181,10 @@ button {
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 button::after {
@@ -196,9 +224,12 @@ button:hover::after {
 
 #calculationSteps p {
     margin: 1rem 0;
-    padding: 1rem;
+    padding: 0.8rem;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 0.9rem;
     font-family: 'Fira Code', monospace;
     color: var(--accent);
 }
@@ -207,8 +238,9 @@ button:hover::after {
     background: rgba(255, 0, 0, 0.1);
     border: 2px solid #FF0000;
     border-radius: 15px;
-    padding: 1rem;
-    margin: 1rem 0;
+    font-size: 0.9rem;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
     backdrop-filter: blur(5px);
 }
 
@@ -234,111 +266,51 @@ button:hover::after {
 
 input[type="text"],
 input[type="number"] {
-    width: calc(100% - 30px); /* Зменшуємо ширину з урахуванням padding */
-    max-width: 500px; /* Фіксуємо максимальну ширину */
+    inputmode: numeric;
+    width: 100%; /* Зменшуємо ширину з урахуванням padding */
+    max-width: none; /* Фіксуємо максимальну ширину */
     margin: 0 auto; /* Центруємо поле */
     display: block; /* Для роботи margin: auto */
-    padding: 1rem;
+    padding: 12px;
     background: rgba(0, 0, 0, 0.3);
     border: 2px solid transparent;
     border-radius: 15px;
     color: white;
-    font-size: 1rem;
+    font-size: 16px;
     transition: all 0.3s;
     box-sizing: border-box; /* Фікс розрахунку ширини */
 }
 
 /* Для мобільних пристроїв */
-@media (max-width: 768px) {
-    input[type="text"],
-    input[type="number"] {
-        width: calc(100% - 20px); /* Ще менше для малих екранів */
-        max-width: 100%;
-    }
-}
-
-/* Медіа-запит для екранів менше 768px */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .container {
-    padding: 15px;
-    margin: 10px;
+    padding: 1rem;
+    margin: 1rem;
     border-radius: 15px;
   }
 
   h1 {
-    font-size: 2rem !important;
+    font-size: 2rem;
     margin-bottom: 1.5rem;
   }
 
   .input-section {
-    padding: 15px;
+    padding: 1rem;
   }
 
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  input[type="text"],
-  input[type="number"] {
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  .rounding-options {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  button {
-    padding: 12px;
-    font-size: 1rem;
-  }
-
-  .result {
-    padding: 15px;
-    margin-top: 1.5rem;
-  }
-
-  #calculationSteps p {
-    font-size: 14px;
-    padding: 8px;
+  label {
+    font-size: 0.8rem;
+    line-height: 1.4;
   }
 }
 
-/* Для дуже малих екранів (наприклад, iPhone SE) */
-@media (max-width: 480px) {
-  .container {
-    padding: 10px;
+@media (hover: none) {
+  .input-section:hover {
+    transform: none;
   }
-
-  h1 {
-    font-size: 1.7rem !important;
-  }
-
-  .rounding-options label {
-    padding: 12px;
-    font-size: 14px;
-  }
-
-  input[type="text"]::placeholder {
-    font-size: 12px;
+  
+  button:hover::after {
+    left: -50%;
   }
 }
 
-/* Виправлення для вертикальної орієнтації */
-@media (orientation: portrait) {
-  body {
-    min-height: 100vh;
-    padding: 10px 0;
-  }
-
-  .container::before {
-    animation: rotate 30s linear infinite;
-  }
-}
-
-/* Оптимізація тач-інтерфейсу */
-button, .rounding-options label {
-  min-height: 48px; /* Мінімальний розмір для тач-елементів */
-  touch-action: manipulation;
-}

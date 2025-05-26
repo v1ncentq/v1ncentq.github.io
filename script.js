@@ -1,4 +1,8 @@
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints;
 
+if(isTouchDevice) {
+  document.body.classList.add('touch-device');
+}
 
 // Оновлення максимального розряду при зміні кількості цифр
 document.getElementById('digits').addEventListener('input', function(e) {
@@ -85,3 +89,4 @@ function calculate() {
     document.getElementById('calculationSteps').innerHTML = steps;
     showResults();
 }
+
