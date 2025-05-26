@@ -45,7 +45,7 @@ function calculate() {
     // Валідація введених даних
     const digits = digitsInput.split(',').map(d => parseInt(d.trim()));
     if (digits.length < 2 || digits.length > 5) {
-        errorDiv.innerHTML = 'Мінімальна кількість цифр — 2';
+        errorDiv.innerHTML = 'Мінімальна кількість цифр — 2, максимальна -5';
         return;
     }
     if (digits.some(d => isNaN(d) || d < 0 || d > 9)) {
